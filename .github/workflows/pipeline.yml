@@ -32,7 +32,8 @@ jobs:
 
       - name: Run pipeline
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          # Maps the GitHub Actions secret (named _SEARCHKEY) into the env var the code reads.
+          ANTHROPIC_API_KEY: ${{ secrets._SEARCHKEY }}
         run: python run_pipeline.py
 
       - name: Commit results
