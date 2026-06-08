@@ -1,5 +1,6 @@
 name: Job Search Pipeline
 
+# Manual trigger (workflow_dispatch) + daily cron.
 # Runs once daily at ~09:00 Israel time, Sunday–Thursday (Israeli work week).
 # Cron is UTC and does not follow DST: 06:00 UTC = 09:00 IDT (summer, UTC+3).
 # In winter (IST, UTC+2) this fires at 08:00 local — adjust to "0 7 * * 0-4" if you prefer 09:00 year-round.
