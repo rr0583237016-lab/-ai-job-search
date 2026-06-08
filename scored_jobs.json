@@ -1,1 +1,16 @@
-[]
+[
+  {
+    "id": "test-001",
+    "company": "שם חברה",
+    "title": "Full Stack Developer",
+    "location": "Haifa, Israel",
+    "url": "https://www.linkedin.com/jobs/...",
+    "fit_score": 8,
+    "score_reason": "התאמה טובה לפרופיל",
+    "ai_opener": "",
+    "location_ok": true,
+    "status": "new",
+    "first_seen": "2026-06-08",
+    "last_seen": "2026-06-08"
+  }
+]
