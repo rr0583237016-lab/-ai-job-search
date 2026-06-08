@@ -1,0 +1,14 @@
+{
+  "name": "AI Job Search Tracker",
+  "short_name": "Job Search",
+  "description": "Automated AI job search engine and application tracker",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#141218",
+  "theme_color": "#6750A4",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

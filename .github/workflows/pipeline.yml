@@ -1,0 +1,47 @@
+name: Job Search Pipeline
+
+# Runs once daily at ~09:00 Israel time, Sunday–Thursday (Israeli work week).
+# Cron is UTC and does not follow DST: 06:00 UTC = 09:00 IDT (summer, UTC+3).
+# In winter (IST, UTC+2) this fires at 08:00 local — adjust to "0 7 * * 0-4" if you prefer 09:00 year-round.
+on:
+  schedule:
+    - cron: "0 6 * * 0-4"
+  workflow_dispatch: {}   # allow manual runs from the Actions tab
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pipeline
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run pipeline
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python run_pipeline.py
+
+      - name: Commit results
+        run: |
+          git config user.name  "job-search-bot"
+          git config user.email "actions@github.com"
+          git add scored_jobs.json docs/
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "pipeline: update jobs ($(date -u +%Y-%m-%dT%H:%MZ))"
+            git push
+          fi

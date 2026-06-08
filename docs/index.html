@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#6750A4" />
+<title>Rachel Gvirtz · Job Search</title>
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="icon" href="icon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="icon.svg" />
+<style>
+  :root{
+    --pri:#6750A4; --pri-c:#fff; --pri-cont:#EADDFF; --on-pri-cont:#21005D;
+    --sec:#625B71; --sec-cont:#E8DEF8;
+    --bg:#FEF7FF; --surf:#FEF7FF; --surf-1:#F7F2FA; --surf-2:#F3EDF7; --surf-3:#EEE8F4;
+    --on-surf:#1D1B20; --on-surf-var:#49454F; --outline:#CAC4D0; --outline-v:#E7E0EC;
+    --err:#B3261E; --err-cont:#F9DEDC; --on-err-cont:#410E0B;
+    --ok:#2E7D32; --warn:#E8A100;
+    --r:16px; --r-lg:24px; --r-sm:8px;
+    --sh-1:0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.08);
+    --sh-2:0 3px 8px rgba(0,0,0,.14),0 2px 4px rgba(0,0,0,.08);
+  }
+  html.dark{
+    --pri:#D0BCFF; --pri-c:#381E72; --pri-cont:#4F378B; --on-pri-cont:#EADDFF;
+    --sec:#CCC2DC; --sec-cont:#4A4458;
+    --bg:#141218; --surf:#141218; --surf-1:#1D1B20; --surf-2:#211F26; --surf-3:#2B2930;
+    --on-surf:#E6E0E9; --on-surf-var:#CAC4D0; --outline:#938F99; --outline-v:#49454F;
+    --err:#F2B8B5; --err-cont:#8C1D18; --on-err-cont:#F9DEDC;
+    --ok:#81C784; --warn:#FFCA47;
+    --sh-1:0 1px 3px rgba(0,0,0,.4); --sh-2:0 3px 10px rgba(0,0,0,.5);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{margin:0;background:var(--bg);color:var(--on-surf);
+    font-family:'Roboto',system-ui,-apple-system,Segoe UI,sans-serif;
+    padding-bottom:calc(80px + env(safe-area-inset-bottom));line-height:1.45}
+  header.top{position:sticky;top:0;z-index:30;background:var(--surf-2);
+    padding:14px 16px calc(14px) 16px;box-shadow:var(--sh-1);
+    padding-top:calc(14px + env(safe-area-inset-top))}
+  header.top h1{font-size:20px;margin:0;font-weight:600;letter-spacing:.2px}
+  header.top .sub{font-size:12px;color:var(--on-surf-var);margin-top:2px}
+  main{max-width:760px;margin:0 auto;padding:16px}
+  .view{display:none}.view.active{display:block;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+  /* Controls */
+  .field{width:100%;padding:13px 14px;border:1px solid var(--outline);border-radius:var(--r-sm);
+    background:var(--surf);color:var(--on-surf);font-size:14px;font-family:inherit}
+  .field:focus{outline:2px solid var(--pri);border-color:var(--pri)}
+  textarea.field{resize:vertical;min-height:72px}
+  button{font-family:inherit;cursor:pointer;border:none}
+  .btn{background:var(--pri);color:var(--pri-c);border-radius:100px;padding:10px 18px;
+    font-size:14px;font-weight:600;box-shadow:var(--sh-1)}
+  .btn:active{transform:scale(.97)}
+  .btn.tonal{background:var(--sec-cont);color:var(--on-pri-cont)}
+  .btn.ghost{background:transparent;color:var(--pri);box-shadow:none;border:1px solid var(--outline)}
+  .btn.sm{padding:7px 12px;font-size:13px}
+  .btn.block{width:100%;justify-content:center}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .chip{display:inline-flex;align-items:center;gap:6px;border-radius:100px;padding:5px 11px;
+    font-size:12px;font-weight:600;background:var(--surf-3);color:var(--on-surf-var)}
+
+  /* Job card */
+  .card{background:var(--surf-1);border-radius:var(--r);padding:16px;margin-bottom:14px;
+    box-shadow:var(--sh-1);border:1px solid var(--outline-v)}
+  .card h3{margin:0 0 2px;font-size:16px;font-weight:600}
+  .card .co{font-size:13px;color:var(--on-surf-var)}
+  .meta{font-size:12px;color:var(--on-surf-var);margin-top:6px;display:flex;gap:10px;flex-wrap:wrap}
+  .score{font-weight:700;border-radius:100px;width:38px;height:38px;display:grid;place-items:center;
+    color:#fff;font-size:15px;flex:none}
+  .reason{font-size:13px;color:var(--on-surf-var);margin:10px 0;font-style:italic}
+  .card-head{display:flex;gap:12px;align-items:flex-start}
+  .card-head .grow{flex:1;min-width:0}
+  details.more{margin-top:10px;border-top:1px solid var(--outline-v);padding-top:10px}
+  details.more summary{cursor:pointer;font-size:13px;color:var(--pri);font-weight:600;list-style:none}
+  details.more summary::-webkit-details-marker{display:none}
+  .ai-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-top:12px}
+  .ai-btn{background:var(--surf-3);color:var(--on-surf);border-radius:var(--r-sm);padding:11px 8px;
+    font-size:12px;font-weight:600;text-align:center;border:1px solid var(--outline-v)}
+  .ai-btn:active{background:var(--pri-cont);color:var(--on-pri-cont)}
+  .rounds .round{background:var(--surf);border:1px solid var(--outline-v);border-radius:var(--r-sm);
+    padding:10px;margin-top:8px;font-size:13px}
+  select.field{appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='%23938F99'><path d='M7 10l5 5 5-5z'/></svg>");
+    background-repeat:no-repeat;background-position:right 10px center;padding-right:34px}
+  label.lbl{font-size:12px;color:var(--on-surf-var);display:block;margin:8px 0 4px;font-weight:600}
+
+  /* Bottom nav */
+  nav.bottom{position:fixed;bottom:0;left:0;right:0;z-index:40;background:var(--surf-2);
+    display:flex;justify-content:space-around;box-shadow:0 -1px 4px rgba(0,0,0,.12);
+    padding-bottom:env(safe-area-inset-bottom)}
+  nav.bottom button{flex:1;background:none;padding:10px 4px 12px;color:var(--on-surf-var);
+    display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:600}
+  nav.bottom button .ic{width:30px;height:30px;border-radius:100px;display:grid;place-items:center;transition:.2s}
+  nav.bottom button.active{color:var(--on-pri-cont)}
+  nav.bottom button.active .ic{background:var(--pri-cont)}
+  nav.bottom svg{width:22px;height:22px;fill:currentColor}
+
+  /* Modal / sheet */
+  .scrim{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:50;display:none;align-items:flex-end;justify-content:center}
+  .scrim.open{display:flex}
+  .sheet{background:var(--surf-1);width:100%;max-width:760px;max-height:90vh;border-radius:var(--r-lg) var(--r-lg) 0 0;
+    display:flex;flex-direction:column;animation:up .3s ease}
+  @keyframes up{from{transform:translateY(100%)}to{transform:none}}
+  .sheet header{padding:16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--outline-v)}
+  .sheet header h2{font-size:16px;margin:0;flex:1}
+  .sheet .body{padding:16px;overflow:auto;flex:1}
+  .sheet .foot{padding:12px 16px;border-top:1px solid var(--outline-v);display:flex;gap:8px;flex-wrap:wrap}
+  .ai-out{font-size:14px;white-space:pre-wrap;word-wrap:break-word}
+  .ai-out h4{margin:14px 0 6px}.ai-out ul{margin:6px 0;padding-left:20px}.ai-out strong{color:var(--on-surf)}
+  .iconbtn{background:none;color:var(--on-surf-var);width:36px;height:36px;border-radius:100px;display:grid;place-items:center}
+  .iconbtn svg{width:22px;height:22px;fill:currentColor}
+  .spinner{width:26px;height:26px;border:3px solid var(--outline-v);border-top-color:var(--pri);
+    border-radius:50%;animation:spin 1s linear infinite;margin:24px auto}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .empty{text-align:center;color:var(--on-surf-var);padding:48px 16px}
+  .toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%);background:var(--surf-3);
+    color:var(--on-surf);padding:11px 18px;border-radius:100px;box-shadow:var(--sh-2);z-index:60;
+    font-size:13px;opacity:0;transition:.3s;pointer-events:none}
+  .toast.show{opacity:1}
+  /* Analytics */
+  .stat{background:var(--surf-1);border-radius:var(--r);padding:16px;text-align:center;box-shadow:var(--sh-1)}
+  .stat .n{font-size:28px;font-weight:700;color:var(--pri)}
+  .stat .l{font-size:12px;color:var(--on-surf-var);margin-top:2px}
+  .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+  .funnel-row{display:flex;align-items:center;gap:10px;margin:8px 0}
+  .funnel-row .bar{height:30px;border-radius:6px;background:var(--pri);min-width:30px;
+    display:flex;align-items:center;padding:0 8px;color:var(--pri-c);font-weight:700;font-size:13px}
+  .funnel-row .cap{width:78px;font-size:13px;color:var(--on-surf-var)}
+  .micro{font-size:11px;color:var(--on-surf-var)}
+  .danger{color:var(--err)}
+  a{color:var(--pri)}
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>Rachel Gvirtz · Job Search</h1>
+  <div class="sub">Targeting: Full Stack Developer, Full Stack Engineer, .NET Developer, C# Developer, Backend Developer, SAP ABAP Developer, SAP UI5 Developer, SAP Full Stack Developer, React Developer, Angular Developer, Software Developer</div>
+  <div class="sub micro">Pipeline updated 2026-06-08 11:54 UTC</div>
+</header>
+
+<main>
+  <!-- JOBS VIEW -->
+  <section id="view-jobs" class="view active">
+    <div class="card" style="padding:12px 14px">
+      <label class="lbl">Add a job by URL (Claude extracts the details)</label>
+      <div class="row" style="flex-wrap:nowrap">
+        <input id="addUrl" class="field" placeholder="Paste any job posting link…" inputmode="url" />
+        <button class="btn" id="addBtn">Add</button>
+      </div>
+    </div>
+    <div class="row" style="margin:6px 2px 14px;justify-content:space-between">
+      <select id="filterStatus" class="field" style="width:auto">
+        <option value="">All statuses</option>
+        <option value="new">New</option><option value="saved">Saved</option>
+        <option value="applied">Applied</option><option value="interview">Interview</option>
+        <option value="offer">Offer</option><option value="rejected">Rejected</option>
+      </select>
+      <select id="sortBy" class="field" style="width:auto">
+        <option value="score">Sort: Fit score</option>
+        <option value="recent">Sort: Recently seen</option>
+      </select>
+    </div>
+    <div id="jobList"></div>
+  </section>
+
+  <!-- ANALYTICS VIEW -->
+  <section id="view-analytics" class="view">
+    <div class="grid2" id="statCards"></div>
+    <div class="card" style="margin-top:14px">
+      <h3 style="margin-top:0">Funnel</h3>
+      <div id="funnel"></div>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">Conversion rates</h3>
+      <div id="conv"></div>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">Timing</h3>
+      <div id="timing" class="micro"></div>
+    </div>
+  </section>
+
+  <!-- SUPPORT VIEW -->
+  <section id="view-support" class="view">
+    <div class="card">
+      <h3 style="margin-top:0">🫶 Emotional support — your mental coach</h3>
+      <p class="micro">A judgment-free corner. Vent, get a pep talk, reframe a rejection, or plan your day.
+        Claude knows your profile and the state of your search.</p>
+      <div id="supportChat" class="ai-out" style="max-height:48vh;overflow:auto"></div>
+      <div class="row" style="flex-wrap:nowrap;margin-top:10px">
+        <input id="supportInput" class="field" placeholder="What's on your mind?" />
+        <button class="btn" id="supportSend">Send</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SETTINGS VIEW -->
+  <section id="view-settings" class="view">
+    <div class="card">
+      <h3 style="margin-top:0">Anthropic API key</h3>
+      <p class="micro">Stored only in this browser (localStorage) and sent directly to Anthropic.
+        Get one at <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">console.anthropic.com</a>.</p>
+      <input id="apiKey" class="field" type="password" placeholder="sk-ant-…" autocomplete="off" />
+      <div class="row" style="margin-top:10px">
+        <button class="btn sm" id="saveKey">Save key</button>
+        <button class="btn sm ghost" id="testKey">Test</button>
+        <span id="keyStatus" class="micro"></span>
+      </div>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">Appearance</h3>
+      <div class="row"><button class="btn sm tonal" id="themeBtn">Toggle dark mode</button></div>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">Data</h3>
+      <p class="micro">Manual jobs, statuses, notes, and interview rounds live in this browser.
+        Pipeline-found jobs are baked into the page on each run.</p>
+      <div class="row">
+        <button class="btn sm ghost" id="exportBtn">Export my data</button>
+        <button class="btn sm ghost danger" id="resetBtn">Reset my data</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<nav class="bottom">
+  <button data-view="jobs" class="active"><span class="ic"><svg viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg></span>Jobs</button>
+  <button data-view="analytics"><span class="ic"><svg viewBox="0 0 24 24"><path d="M5 9.2h3V19H5zM10.6 5h3v14h-3zm5.6 8H19v6h-2.8z"/></svg></span>Analytics</button>
+  <button data-view="support"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 21s-6.7-4.3-9.3-8.1C.7 9.9 2 6 5.4 6c1.9 0 3.2 1 4.6 2.6C11.4 7 12.7 6 14.6 6 18 6 19.3 9.9 21.3 12.9 18.7 16.7 12 21 12 21z"/></svg></span>Support</button>
+  <button data-view="settings"><span class="ic"><svg viewBox="0 0 24 24"><path d="M19.1 12.9c0-.3.1-.6.1-.9s0-.6-.1-.9l2-1.6-2-3.4-2.4 1c-.5-.4-1-.7-1.6-.9l-.4-2.6H9.8l-.4 2.6c-.6.2-1.1.5-1.6.9l-2.4-1-2 3.4 2 1.6c-.1.3-.1.6-.1.9s0 .6.1.9l-2 1.6 2 3.4 2.4-1c.5.4 1 .7 1.6.9l.4 2.6h4.4l.4-2.6c.6-.2 1.1-.5 1.6-.9l2.4 1 2-3.4-2-1.6zM12 15.5A3.5 3.5 0 1112 8.5a3.5 3.5 0 010 7z"/></svg></span>Settings</button>
+</nav>
+
+<!-- Generic AI sheet -->
+<div class="scrim" id="sheet">
+  <div class="sheet">
+    <header>
+      <h2 id="sheetTitle">…</h2>
+      <button class="iconbtn" id="sheetCopy" title="Copy"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button>
+      <button class="iconbtn" id="sheetClose" title="Close"><svg viewBox="0 0 24 24"><path d="M19 6.4L17.6 5 12 10.6 6.4 5 5 6.4 10.6 12 5 17.6 6.4 19 12 13.4 17.6 19 19 17.6 13.4 12z"/></svg></button>
+    </header>
+    <div class="body" id="sheetBody"></div>
+    <div class="foot" id="sheetFoot"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================ DATA ============================ */
+const PIPELINE_JOBS = [];
+const CONFIG = {"profile_name": "Rachel Gvirtz", "contact": {"email": "rr0583237016@gmail.com", "phone": "058-456-4900", "linkedin": "linkedin.com/in/rachelgvirtz"}, "roles": ["Full Stack Developer", "Full Stack Engineer", ".NET Developer", "C# Developer", "Backend Developer", "SAP ABAP Developer", "SAP UI5 Developer", "SAP Full Stack Developer", "React Developer", "Angular Developer", "Software Developer"], "locations": {"primary": ["Haifa, Israel", "Northern Israel", "Haifa District"], "hybrid_ok": ["Tel Aviv, Israel"], "remote": {"worldwide": true, "timezone_range": "UTC+2 to UTC+5"}, "notes": "Primary: Haifa and surrounding area. Tel Aviv only if hybrid (not full-time on-site). Fully remote worldwide welcome within UTC+2..UTC+5. On-site outside the Haifa area is NOT acceptable."}, "filters": {"min_score": 4, "max_age_days": 30}, "search": {"min_results": 8, "max_results": 15}, "models": {"search": "claude-opus-4-8", "score": "claude-haiku-4-5"}, "ats": {"_comment": "Public ATS job boards to scrape. Add company board tokens you target. Unknown/invalid tokens are skipped gracefully. greenhouse: boards-api.greenhouse.io/v1/boards/{token}/jobs | lever: api.lever.co/v0/postings/{token}?mode=json | ashby: api.ashbyhq.com/posting-api/job-board/{token}", "greenhouse": [], "lever": [], "ashby": []}};
+const PROFILE = "# Candidate Profile — Rachel Gvirtz\n\n> This file is the single source of truth for **who the candidate is**. It is fed to the\n> scoring model (Haiku) and to every in-browser AI feature (cover letters, interview prep,\n> dossiers, CV tailoring, emotional support). Two personas are maintained — the pipeline and\n> the browser pick the relevant one per job (SAP roles → SAP persona; everything else →\n> Full Stack persona). Both are the same person.\n\n## Snapshot\n- **Name:** Rachel Gvirtz\n- **Location:** Haifa, Israel\n- **Email:** rr0583237016@gmail.com · **Phone:** 058-456-4900 · **LinkedIn:** linkedin.com/in/rachelgvirtz\n- **Experience:** 4+ years full stack; ~2+ years hands-on enterprise SAP (overlapping)\n\n## Location & work preferences (used for `location_ok` scoring)\n- **Primary:** Haifa and the surrounding northern area — strongly preferred.\n- **Tel Aviv:** acceptable **only if hybrid** (not full-time on-site).\n- **Remote:** fully remote positions worldwide welcome, within timezones **UTC+2 to UTC+5**.\n- **Not acceptable:** full-time on-site roles outside the Haifa area; relocation is not offered.\n\n## Core stack\nC#, .NET / .NET Framework, ASP.NET Web API, React, Angular (8/10/14), SAP ABAP, SAP UI5,\nOData, SAP Gateway, SQL Server (stored procedures, query optimization), REST APIs, JWT,\nWebSockets, Git, Azure, Docker (basics), Swagger, Postman, TypeScript, JavaScript, HTML5, CSS3.\n\n## Key strengths (emphasize in scoring, cover letters, and tailoring)\n1. **Dual expertise** — enterprise SAP development (ABAP, UI5, Adobe/Smart Forms, Workflow,\n   OData/Gateway) **and** modern full stack (C#, .NET, React, Angular). Few candidates bridge both.\n2. **Hands-on AI tooling** — building a custom MCP server; daily use of Claude Code, Cursor,\n   Codex, and OpenAI APIs for architecture, debugging, and delivery acceleration.\n3. **End-to-end ownership** — sole developer on full platform builds, from architecture to\n   production (e.g. a complete matchmaking platform: auth, recommendations, real-time messaging).\n4. **Direct client-facing delivery** in enterprise SAP environments (Bank of Israel, Camtek, Merkavim).\n\n---\n\n## Persona A — Full Stack Developer (default)\n**Headline:** Full Stack Developer | C# .NET | React | Angular | SQL Server | AI-Assisted Development\n\nFull Stack Developer with 4+ years building enterprise and customer-facing applications using\nC#, .NET, React, Angular, SQL Server, and SAP UI5. Strong in end-to-end development, REST APIs,\ndatabase design, authentication, performance optimization, and production troubleshooting.\nActively expanding into AI-assisted development (Cursor, Claude, Codex, OpenAI APIs, custom MCP server).\n\n**Experience highlights**\n- **OiTo (Feb 2024–present)** — enterprise & customer-facing apps across React, SAP UI5, OData, ABAP, SQL.\n  Tempo ordering platform (React, REST), ReadUp digital reading platform (React/C#/.NET/SQL),\n  Bank of Israel (SAP UI5/OData/Gateway).\n- **Freelance (Jul 2022–Feb 2024)** — sole developer of a full matchmaking platform: Angular + C#/.NET/SQL,\n  JWT auth, subscription plans, recommendation logic, daily match suggestions, WebSocket messaging.\n- **ONE Technologies (Nov 2022–Feb 2023)** — React enterprise apps in Azure-hosted environments, Git PR workflows.\n- **Java & OOP Instructor (2021–2022)**.\n- **Education:** Practical Software Engineering, Mahat.\n\n**Best-fit roles:** Full Stack Developer/Engineer, .NET/C# Developer, Backend Developer,\nReact Developer, Angular Developer, Software Developer.\n\n---\n\n## Persona B — SAP ABAP & UI5 Developer\n**Headline:** SAP ABAP & UI5 Developer | Enterprise SAP Solutions | Forms, Workflow & Integrations\n\nSAP ABAP & UI5 Developer with ~2+ years of hands-on enterprise SAP development, working directly\nwith customers on business-critical processes. Custom ABAP development, SAP UI5 apps, OData services,\nAdobe Forms, Smart Forms, workflow processes, custom reports, interfaces, and production troubleshooting.\nBusiness understanding across MM, SD, FI, PM, SR, and HR areas. S/4HANA familiarity; basic ABAP CDS Views.\n\n**Experience highlights**\n- **OiTo (Feb 2024–present)** — SAP ABAP/UI5 services for enterprise customers (Camtek, Merkavim) with\n  direct client interaction. Custom XML-based interface for supply records to external warehouses\n  (data mapping, background processing, output files). Adobe/Smart Forms, SAP Script. ABAP/SQL tuning.\n- **Merkavim** — ongoing ABAP development, workflow/approval processes across MM/SD/FI/PM/SR/HR.\n- **Bank of Israel** — SAP UI5 / OData / Gateway enterprise UI and end-to-end process flows.\n- **Additional full stack background** (C#, .NET, React, Angular, SQL, REST) supports integration\n  thinking and end-to-end delivery.\n\n**Best-fit roles:** SAP ABAP Developer, SAP UI5 Developer, SAP Full Stack Developer, SAP Developer.\n\n---\n\n## How to choose a persona\n- Job title or description mentions **SAP / ABAP / UI5 / Fiori / OData / S/4HANA** → use **Persona B (SAP)**.\n- Otherwise → use **Persona A (Full Stack)**.\n- For roles that blend both (e.g. \"SAP Full Stack\"), lead with SAP and weave in the full stack depth.\n";
+const MODEL = "claude-opus-4-8";
+const STAGES = ["phone screen","HR / recruiter","technical","hiring manager","final / panel"];
+
+const LS = {
+  get(k,d){ try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch{return d} },
+  set(k,v){ localStorage.setItem(k, JSON.stringify(v)) },
+};
+let STATE   = LS.get("ajs_state", {});      // jobId -> {status,notes,rounds,history:{status:date}}
+let MANUAL  = LS.get("ajs_manual", []);     // manually added jobs
+function saveState(){ LS.set("ajs_state", STATE) }
+function saveManual(){ LS.set("ajs_manual", MANUAL) }
+
+function allJobs(){
+  const map = {};
+  PIPELINE_JOBS.forEach(j => map[j.id] = {...j});
+  MANUAL.forEach(j => map[j.id] = {...(map[j.id]||{}), ...j});
+  return Object.values(map);
+}
+function jobState(id){
+  if(!STATE[id]) STATE[id] = {status:"new", notes:"", rounds:[], history:{}};
+  return STATE[id];
+}
+function setStatus(id, status){
+  const s = jobState(id);
+  if(s.status !== status){ s.history = s.history||{}; s.history[status] = todayISO(); }
+  s.status = status; saveState(); renderAnalytics();
+}
+function todayISO(){ return new Date().toISOString().slice(0,10) }
+function daysBetween(a,b){ return Math.round((new Date(b)-new Date(a))/864e5) }
+
+/* ============================ UI HELPERS ============================ */
+const $ = s => document.querySelector(s);
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),2400) }
+function esc(s){ return (s||"").replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c])) }
+function mdLite(s){
+  let h = esc(s);
+  h = h.replace(/^### (.*)$/gm,"<h4>$1</h4>").replace(/^## (.*)$/gm,"<h4>$1</h4>");
+  h = h.replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>");
+  h = h.replace(/^\s*[-*] (.*)$/gm,"<li>$1</li>");
+  h = h.replace(/(<li>[\s\S]*?<\/li>)/g, m=>"<ul>"+m+"</ul>").replace(/<\/ul>\s*<ul>/g,"");
+  h = h.replace(/\n{2,}/g,"<br><br>").replace(/\n/g,"<br>");
+  return h;
+}
+function scoreColor(n){ n=+n||0; if(n>=8)return"#2E7D32"; if(n>=6)return"#558B2F"; if(n>=4)return"#E8A100"; return"#9E9E9E" }
+
+/* ============================ CLAUDE API ============================ */
+function apiKey(){ return LS.get("ajs_apikey","") }
+async function callClaude({system, messages, tools, max_tokens=2048, useThinking=false}){
+  const key = apiKey();
+  if(!key){ throw new Error("No API key. Add one in Settings."); }
+  const body = { model: MODEL, max_tokens, messages };
+  if(system) body.system = system;
+  if(tools) body.tools = tools;
+  if(useThinking) body.thinking = {type:"adaptive"};
+  // bounded loop to follow web_search/web_fetch pause_turn continuations
+  let text = "";
+  for(let i=0;i<5;i++){
+    const r = await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{
+        "content-type":"application/json",
+        "x-api-key":key,
+        "anthropic-version":"2023-06-01",
+        "anthropic-dangerous-direct-browser-access":"true"
+      },
+      body: JSON.stringify(body)
+    });
+    if(!r.ok){
+      const e = await r.text();
+      throw new Error("Anthropic API "+r.status+": "+e.slice(0,300));
+    }
+    const data = await r.json();
+    (data.content||[]).forEach(b=>{ if(b.type==="text") text += b.text; });
+    if(data.stop_reason==="pause_turn"){
+      body.messages = [...body.messages, {role:"assistant", content:data.content}];
+      continue;
+    }
+    break;
+  }
+  return text.trim();
+}
+
+/* ============================ AI SHEET ============================ */
+let sheetText = "";
+function openSheet(title){
+  $("#sheetTitle").textContent = title;
+  $("#sheetBody").innerHTML = '<div class="spinner"></div>';
+  $("#sheetFoot").innerHTML = "";
+  sheetText = "";
+  $("#sheet").classList.add("open");
+}
+function closeSheet(){ $("#sheet").classList.remove("open") }
+function sheetRender(text){ sheetText=text; $("#sheetBody").innerHTML = '<div class="ai-out">'+mdLite(text)+'</div>'; }
+function sheetError(e){ $("#sheetBody").innerHTML = '<div class="ai-out danger">⚠️ '+esc(e.message||String(e))+'</div>'; }
+$("#sheetClose").onclick = closeSheet;
+$("#sheetCopy").onclick = ()=>{ navigator.clipboard.writeText(sheetText||""); toast("Copied"); };
+$("#sheet").onclick = e=>{ if(e.target.id==="sheet") closeSheet(); };
+
+function jobContext(job){
+  return `COMPANY: ${job.company}\nTITLE: ${job.title}\nLOCATION: ${job.location}\n`+
+         `POSTED: ${job.posted||"?"}\nURL: ${job.url}\nDESCRIPTION: ${job.description||"(none provided)"}`;
+}
+const PERSONA_HINT = "Pick the right persona from the profile: SAP/ABAP/UI5/Fiori roles -> SAP persona; otherwise -> Full Stack persona.";
+
+async function aiFeature(job, kind){
+  const stage = (jobState(job.id).rounds.slice(-1)[0]||{}).stage || "phone screen";
+  const status = jobState(job.id).status;
+  const prompts = {
+    cover:{ title:"✉️ Cover letter", max:1500, system:
+      `You are an expert career writer. Write a concise, specific, non-generic cover letter for this candidate and job. `+
+      `${PERSONA_HINT} Reference 2-3 concrete strengths that match the role. Warm, confident, no clichés. `+
+      `Output the letter only.\n\nCANDIDATE PROFILE:\n${PROFILE}`,
+      user:`Write a cover letter for this job:\n${jobContext(job)}` },
+    prep:{ title:"📝 Interview prep", max:2500, system:
+      `You are an interview coach. ${PERSONA_HINT} Produce: (1) 8 likely interview questions for this specific role, `+
+      `(2) tailored talking points drawing on the candidate's real experience, (3) 5 smart questions for the candidate to ask. `+
+      `Use clear markdown headings.\n\nCANDIDATE PROFILE:\n${PROFILE}`,
+      user:`Prepare me for this interview:\n${jobContext(job)}` },
+    dossier:{ title:"🏢 Company dossier", max:3000, useThinking:true,
+      tools:[{type:"web_search_20260209",name:"web_search",max_uses:6}], system:
+      `You are a company researcher. Search the web for current info on this company and produce a dossier with sections: `+
+      `Overview, Funding/Size, Culture, Recent news, Smart questions to ask, and a "Red flags" section if any. `+
+      `Be factual and cite company/source names inline.`,
+      user:`Research this company for a candidate interviewing there:\nCOMPANY: ${job.company}\nROLE: ${job.title}\nURL: ${job.url}` },
+    cv:{ title:"📄 CV tailoring", max:2200, system:
+      `You are a resume expert. ${PERSONA_HINT} Suggest concrete tailoring: which bullets to emphasize/add, keywords to mirror `+
+      `from the job, and a 3-line tailored professional summary. Be specific to this candidate's real experience.\n\nCANDIDATE PROFILE:\n${PROFILE}`,
+      user:`Tailor my CV for this job:\n${jobContext(job)}` },
+    support:{ title:"🫶 Emotional support", max:1200, system:
+      `You are a warm, grounded mental coach for a job seeker. The candidate is currently at status "${status}" `+
+      `and (if interviewing) stage "${stage}" for this role. Acknowledge feelings, normalize the stress, and give 2-3 `+
+      `concrete, kind next steps. Be human, not corporate.`,
+      user:`Give me context-aware encouragement for this job:\n${jobContext(job)}` },
+  };
+  const p = prompts[kind];
+  openSheet(p.title);
+  try{
+    const text = await callClaude({system:p.system, messages:[{role:"user",content:p.user}],
+      tools:p.tools, max_tokens:p.max, useThinking:p.useThinking});
+    sheetRender(text || "(no response)");
+  }catch(e){ sheetError(e); }
+}
+
+/* ============================ VOICE SIMULATION ============================ */
+function voiceSim(job){
+  const stage = (jobState(job.id).rounds.slice(-1)[0]||{}).stage || "phone screen";
+  $("#sheetTitle").textContent = "🎙️ Voice interview · "+stage;
+  $("#sheetFoot").innerHTML = "";
+  const hasSR = "webkitSpeechRecognition" in window || "SpeechRecognition" in window;
+  $("#sheetBody").innerHTML =
+    `<p class="micro">Stage-aware mock interview. Claude plays the interviewer for the <strong>${esc(stage)}</strong> round. `+
+    (hasSR? `Tap 🎤 to answer by voice, or type.</p>`:`Voice input isn't supported in this browser — type your answers.</p>`)+
+    `<div id="vsLog" class="ai-out" style="max-height:42vh;overflow:auto"></div>`+
+    `<div class="row" style="flex-wrap:nowrap;margin-top:10px">`+
+      (hasSR?`<button class="iconbtn" id="vsMic" title="Speak"><svg viewBox="0 0 24 24"><path d="M12 14a3 3 0 003-3V5a3 3 0 00-6 0v6a3 3 0 003 3zm5-3a5 5 0 01-10 0H5a7 7 0 006 6.9V21h2v-3.1A7 7 0 0019 11h-2z"/></svg></button>`:"")+
+      `<input id="vsInput" class="field" placeholder="Your answer…"/>`+
+      `<button class="btn" id="vsSend">Send</button></div>`;
+  $("#sheet").classList.add("open");
+
+  const sys = `You are conducting a realistic ${stage} interview for this role. Ask ONE question at a time, react briefly `+
+    `to the candidate's answer, then ask a natural follow-up. Keep your turns short and conversational (spoken style). `+
+    `${PERSONA_HINT}\n\nROLE:\n${jobContext(job)}\n\nCANDIDATE PROFILE:\n${PROFILE}`;
+  let convo = [];
+  const log = $("#vsLog");
+  function add(role,text){ log.innerHTML += `<p><strong>${role==="assistant"?"Interviewer":"You"}:</strong> ${esc(text)}</p>`; log.scrollTop=log.scrollHeight; }
+  function speak(t){ try{ const u=new SpeechSynthesisUtterance(t); u.rate=1; speechSynthesis.speak(u);}catch{} }
+
+  async function turn(userText){
+    if(userText){ convo.push({role:"user",content:userText}); add("user",userText); }
+    log.innerHTML += `<p class="micro" id="vsThinking">Interviewer is thinking…</p>`;
+    try{
+      const reply = await callClaude({system:sys, messages:convo.length?convo:[{role:"user",content:"Please begin the interview."}], max_tokens:600});
+      $("#vsThinking")?.remove();
+      convo.push({role:"assistant",content:reply}); add("assistant",reply); speak(reply);
+    }catch(e){ $("#vsThinking")?.remove(); add("assistant","[error: "+(e.message||e)+"]"); }
+  }
+  $("#vsSend").onclick = ()=>{ const v=$("#vsInput").value.trim(); if(v){$("#vsInput").value="";turn(v);} };
+  $("#vsInput").onkeydown = e=>{ if(e.key==="Enter")$("#vsSend").click(); };
+  if(hasSR){
+    const SR = window.SpeechRecognition||window.webkitSpeechRecognition;
+    const rec = new SR(); rec.lang="en-US"; rec.interimResults=false;
+    $("#vsMic").onclick = ()=>{ try{rec.start(); toast("Listening…");}catch{} };
+    rec.onresult = e=>{ const t=e.results[0][0].transcript; $("#vsInput").value=t; $("#vsSend").click(); };
+    rec.onerror = ()=>toast("Mic error");
+  }
+  turn(null); // interviewer opens
+}
+
+/* ============================ ADD BY URL ============================ */
+$("#addBtn").onclick = async ()=>{
+  const url = $("#addUrl").value.trim();
+  if(!url){ toast("Paste a link first"); return; }
+  if(!apiKey()){ toast("Add your API key in Settings"); switchView("settings"); return; }
+  $("#addBtn").textContent="…";
+  try{
+    const schema = `{"company":"","title":"","location":"","posted":"YYYY-MM-DD","description":""}`;
+    const text = await callClaude({
+      system:"Extract job posting details from the page at the given URL. Return ONLY a JSON object matching: "+schema+". If unknown, use empty string.",
+      messages:[{role:"user",content:"Extract details for this posting: "+url}],
+      tools:[{type:"web_fetch_20260209",name:"web_fetch",max_uses:3}],
+      max_tokens:1200, useThinking:true
+    });
+    const m = text.match(/\{[\s\S]*\}/);
+    const info = m? JSON.parse(m[0]) : {};
+    const id = "m"+Math.abs(hashStr(url)).toString(16);
+    const job = { id, url, company:info.company||"(unknown)", title:info.title||"(untitled role)",
+      location:info.location||"", posted:info.posted||todayISO(), description:info.description||"",
+      source:"manual", initial_status:"saved", first_seen:todayISO(), fit_score:null, ai_opener:"" };
+    if(MANUAL.find(j=>j.id===id)){ toast("Already added"); }
+    else { MANUAL.unshift(job); saveManual(); }
+    jobState(id).status="saved"; saveState();
+    $("#addUrl").value=""; renderJobs(); renderAnalytics(); toast("Added: "+job.title);
+  }catch(e){ toast("Couldn't extract — "+(e.message||e)); }
+  $("#addBtn").textContent="Add";
+};
+function hashStr(s){ let h=0; for(let i=0;i<s.length;i++){ h=(h<<5)-h+s.charCodeAt(i); h|=0; } return h; }
+
+/* ============================ RENDER JOBS ============================ */
+function renderJobs(){
+  const fStatus = $("#filterStatus").value;
+  const sort = $("#sortBy").value;
+  let jobs = allJobs().map(j=>({...j, _state:jobState(j.id)}));
+  if(fStatus) jobs = jobs.filter(j=>j._state.status===fStatus);
+  jobs.sort((a,b)=> sort==="recent"
+    ? (b.last_seen||b.first_seen||"").localeCompare(a.last_seen||a.first_seen||"")
+    : ((+b.fit_score||0)-(+a.fit_score||0)));
+  const el = $("#jobList");
+  if(!jobs.length){ el.innerHTML = '<div class="empty">No jobs yet. The pipeline adds them automatically, or paste a link above.</div>'; return; }
+  el.innerHTML = jobs.map(cardHTML).join("");
+  jobs.forEach(j=>wireCard(j.id));
+}
+function statusOptions(cur){
+  return ["new","saved","applied","interview","offer","rejected"]
+    .map(s=>`<option value="${s}" ${s===cur?"selected":""}>${s[0].toUpperCase()+s.slice(1)}</option>`).join("");
+}
+function cardHTML(j){
+  const st = j._state;
+  const fit = j.fit_score==null? "–" : j.fit_score;
+  const age = j.posted? `posted ${j.posted}`:"";
+  const opener = j.ai_opener? `<details class="more"><summary>AI opener</summary><div class="reason">${esc(j.ai_opener)}</div></details>`:"";
+  return `<div class="card" data-id="${j.id}">
+    <div class="card-head">
+      <div class="score" style="background:${scoreColor(j.fit_score)}">${fit}</div>
+      <div class="grow">
+        <h3>${esc(j.title)}</h3>
+        <div class="co">${esc(j.company)}</div>
+        <div class="meta">
+          <span>📍 ${esc(j.location||"—")}</span>
+          <span class="chip">${esc(j.source||"pipeline")}</span>
+          ${j.initial_status?`<span class="chip">manual</span>`:""}
+          ${age?`<span>${age}</span>`:""}
+        </div>
+      </div>
+    </div>
+    ${j.score_reason?`<div class="reason">${esc(j.score_reason)}</div>`:""}
+    <div class="row" style="margin-top:8px">
+      <select class="field js-status" style="width:auto">${statusOptions(st.status)}</select>
+      <a class="btn sm ghost" href="${j.url}" target="_blank" rel="noopener">Open posting ↗</a>
+    </div>
+    ${opener}
+    <details class="more"><summary>Notes & interview rounds</summary>
+      <label class="lbl">Notes</label>
+      <textarea class="field js-notes" placeholder="Your notes…">${esc(st.notes||"")}</textarea>
+      <div class="rounds">
+        <label class="lbl">Interview rounds</label>
+        <div class="js-rounds"></div>
+        <button class="btn sm tonal js-add-round" style="margin-top:8px">+ Add round</button>
+      </div>
+    </details>
+    <div class="ai-grid">
+      <button class="ai-btn" data-ai="cover">✉️ Cover letter</button>
+      <button class="ai-btn" data-ai="prep">📝 Interview prep</button>
+      <button class="ai-btn" data-ai="voice">🎙️ Voice sim</button>
+      <button class="ai-btn" data-ai="dossier">🏢 Dossier</button>
+      <button class="ai-btn" data-ai="cv">📄 CV tailoring</button>
+      <button class="ai-btn" data-ai="support">🫶 Support</button>
+    </div>
+  </div>`;
+}
+function roundsHTML(id){
+  const st = jobState(id);
+  const wrap = document.querySelector(`.card[data-id="${id}"] .js-rounds`);
+  if(!wrap) return;
+  wrap.innerHTML = (st.rounds||[]).map((r,i)=>`
+    <div class="round" data-i="${i}">
+      <div class="row">
+        <input class="field jr-date" type="date" value="${r.date||""}" style="width:auto">
+        <select class="field jr-stage" style="width:auto">${STAGES.map(s=>`<option ${s===r.stage?"selected":""}>${s}</option>`).join("")}</select>
+        <select class="field jr-out" style="width:auto">
+          ${["pending","passed","failed"].map(o=>`<option ${o===r.outcome?"selected":""}>${o}</option>`).join("")}</select>
+        <button class="iconbtn jr-del danger" title="Remove"><svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></button>
+      </div>
+      <input class="field jr-int" placeholder="Interviewer name / title" value="${esc(r.interviewer||"")}" style="margin-top:6px">
+    </div>`).join("") || '<div class="micro">No rounds yet.</div>';
+  wrap.querySelectorAll(".round").forEach(div=>{
+    const i = +div.dataset.i;
+    const upd = ()=>{ st.rounds[i]={ date:div.querySelector(".jr-date").value, stage:div.querySelector(".jr-stage").value,
+      outcome:div.querySelector(".jr-out").value, interviewer:div.querySelector(".jr-int").value }; saveState(); };
+    div.querySelectorAll("input,select").forEach(inp=>inp.onchange=upd);
+    div.querySelector(".jr-del").onclick=()=>{ st.rounds.splice(i,1); saveState(); roundsHTML(id); };
+  });
+}
+function wireCard(id){
+  const card = document.querySelector(`.card[data-id="${id}"]`);
+  if(!card) return;
+  const job = allJobs().find(j=>j.id===id);
+  card.querySelector(".js-status").onchange = e=>setStatus(id, e.target.value);
+  const notes = card.querySelector(".js-notes");
+  let t; notes.oninput = ()=>{ clearTimeout(t); t=setTimeout(()=>{ jobState(id).notes=notes.value; saveState(); },400); };
+  card.querySelector(".js-add-round").onclick = ()=>{ jobState(id).rounds.push({date:todayISO(),stage:"phone screen",outcome:"pending",interviewer:""}); saveState(); roundsHTML(id); };
+  card.querySelectorAll(".ai-btn").forEach(b=> b.onclick=()=>{
+    if(!apiKey()){ toast("Add your API key in Settings"); switchView("settings"); return; }
+    const kind=b.dataset.ai; kind==="voice"? voiceSim(job) : aiFeature(job, kind);
+  });
+  roundsHTML(id);
+}
+$("#filterStatus").onchange = renderJobs;
+$("#sortBy").onchange = renderJobs;
+
+/* ============================ ANALYTICS ============================ */
+function renderAnalytics(){
+  const jobs = allJobs();
+  const cnt = {new:0,saved:0,applied:0,interview:0,offer:0,rejected:0};
+  jobs.forEach(j=>{ cnt[jobState(j.id).status]=(cnt[jobState(j.id).status]||0)+1; });
+  const total = jobs.length;
+  $("#statCards").innerHTML = [
+    ["Total jobs",total],["Applied",cnt.applied+cnt.interview+cnt.offer+cnt.rejected],
+    ["Interviewing",cnt.interview],["Offers",cnt.offer]
+  ].map(([l,n])=>`<div class="stat"><div class="n">${n}</div><div class="l">${l}</div></div>`).join("");
+
+  const funnel = [["New",cnt.new],["Saved",cnt.saved],["Applied",cnt.applied],["Interview",cnt.interview],["Offer",cnt.offer]];
+  const max = Math.max(1,...funnel.map(f=>f[1]));
+  $("#funnel").innerHTML = funnel.map(([l,n])=>`<div class="funnel-row"><span class="cap">${l}</span>
+    <div class="bar" style="width:${Math.max(8,n/max*100)}%">${n}</div></div>`).join("");
+
+  const appliedTotal = cnt.applied+cnt.interview+cnt.offer+cnt.rejected;
+  const interviewTotal = cnt.interview+cnt.offer;
+  const pct=(a,b)=> b? Math.round(a/b*100)+"%":"—";
+  $("#conv").innerHTML = `
+    <div class="funnel-row"><span class="cap" style="width:auto">Applied → Interview</span> &nbsp;<strong>${pct(interviewTotal,appliedTotal)}</strong></div>
+    <div class="funnel-row"><span class="cap" style="width:auto">Interview → Offer</span> &nbsp;<strong>${pct(cnt.offer,interviewTotal)}</strong></div>
+    <div class="funnel-row"><span class="cap" style="width:auto">Offer rate (of applied)</span> &nbsp;<strong>${pct(cnt.offer,appliedTotal)}</strong></div>`;
+
+  // Average wait: days from "applied" to "interview" where both timestamps exist.
+  let waits=[];
+  jobs.forEach(j=>{ const h=jobState(j.id).history||{}; if(h.applied&&h.interview) waits.push(daysBetween(h.applied,h.interview)); });
+  const avg = waits.length? (waits.reduce((a,b)=>a+b,0)/waits.length).toFixed(1) : null;
+  // Days since applied for those still waiting.
+  let pending=[];
+  jobs.forEach(j=>{ const s=jobState(j.id); const h=s.history||{}; if(s.status==="applied"&&h.applied) pending.push(daysBetween(h.applied,todayISO())); });
+  $("#timing").innerHTML =
+    `Average wait applied → first interview: <strong>${avg!=null?avg+" days":"not enough data"}</strong><br>`+
+    `Currently awaiting reply: <strong>${pending.length}</strong>`+
+    (pending.length?` (avg ${(pending.reduce((a,b)=>a+b,0)/pending.length).toFixed(0)} days since applying)`:"");
+}
+
+/* ============================ GLOBAL SUPPORT CHAT ============================ */
+let supportConvo = [];
+function searchSummary(){
+  const jobs=allJobs(); const c={};
+  jobs.forEach(j=>{const s=jobState(j.id).status; c[s]=(c[s]||0)+1;});
+  return `Search snapshot — total ${jobs.length}; `+Object.entries(c).map(([k,v])=>`${v} ${k}`).join(", ");
+}
+$("#supportSend").onclick = async ()=>{
+  const inp=$("#supportInput"); const msg=inp.value.trim(); if(!msg) return;
+  if(!apiKey()){ toast("Add your API key in Settings"); switchView("settings"); return; }
+  inp.value=""; const log=$("#supportChat");
+  log.innerHTML += `<p><strong>You:</strong> ${esc(msg)}</p>`;
+  supportConvo.push({role:"user",content:msg});
+  log.innerHTML += `<p class="micro" id="spThink">…</p>`; log.scrollTop=log.scrollHeight;
+  try{
+    const reply = await callClaude({
+      system:`You are a warm, grounded mental coach for a job seeker (profile below). Be human, specific, and kind. `+
+        `Validate feelings, then offer 1-3 concrete next steps. ${searchSummary()}\n\nPROFILE:\n${PROFILE}`,
+      messages:supportConvo, max_tokens:900 });
+    $("#spThink")?.remove();
+    supportConvo.push({role:"assistant",content:reply});
+    log.innerHTML += `<p><strong>Coach:</strong> ${mdLite(reply)}</p>`; log.scrollTop=log.scrollHeight;
+  }catch(e){ $("#spThink")?.remove(); log.innerHTML += `<p class="danger">⚠️ ${esc(e.message||e)}</p>`; }
+};
+$("#supportInput").onkeydown = e=>{ if(e.key==="Enter")$("#supportSend").click(); };
+
+/* ============================ SETTINGS ============================ */
+$("#apiKey").value = apiKey();
+$("#saveKey").onclick = ()=>{ LS.set("ajs_apikey",$("#apiKey").value.trim()); toast("Key saved"); };
+$("#testKey").onclick = async ()=>{
+  LS.set("ajs_apikey",$("#apiKey").value.trim());
+  $("#keyStatus").textContent="testing…";
+  try{ await callClaude({messages:[{role:"user",content:"Reply with OK."}],max_tokens:16}); $("#keyStatus").textContent="✅ working"; }
+  catch(e){ $("#keyStatus").textContent="❌ "+(e.message||e).slice(0,80); }
+};
+$("#themeBtn").onclick = ()=>{ const dark=!document.documentElement.classList.contains("dark");
+  document.documentElement.classList.toggle("dark",dark); LS.set("ajs_theme",dark?"dark":"light"); };
+$("#exportBtn").onclick = ()=>{
+  const blob=new Blob([JSON.stringify({state:STATE,manual:MANUAL},null,2)],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="job-search-data.json"; a.click();
+};
+$("#resetBtn").onclick = ()=>{ if(confirm("Erase all your statuses, notes, rounds, and manual jobs? Pipeline jobs stay.")){
+  localStorage.removeItem("ajs_state"); localStorage.removeItem("ajs_manual"); STATE={}; MANUAL=[]; renderJobs(); renderAnalytics(); toast("Reset done"); } };
+
+/* ============================ NAV / INIT ============================ */
+function switchView(v){
+  document.querySelectorAll(".view").forEach(s=>s.classList.remove("active"));
+  $("#view-"+v).classList.add("active");
+  document.querySelectorAll("nav.bottom button").forEach(b=>b.classList.toggle("active",b.dataset.view===v));
+  if(v==="analytics") renderAnalytics();
+  window.scrollTo(0,0);
+}
+document.querySelectorAll("nav.bottom button").forEach(b=> b.onclick=()=>switchView(b.dataset.view));
+
+(function init(){
+  const theme = LS.get("ajs_theme", matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+  document.documentElement.classList.toggle("dark", theme==="dark");
+  renderJobs(); renderAnalytics();
+  if("serviceWorker" in navigator){ navigator.serviceWorker.register("sw.js").catch(()=>{}); }
+})();
+</script>
+</body>
+</html>
