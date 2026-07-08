@@ -32,6 +32,22 @@
     "last_seen": "2026-07-01"
   },
   {
+    "company": "Sequoia Connect",
+    "title": "S/4 ABAP Developer",
+    "location": "Unspecified (likely remote/global) — verify timezone eligibility",
+    "url": "https://www.comeet.com/jobs/sequoiaconnect/45.004/s4-abap-developer/B7.869",
+    "posted": "",
+    "description": "SAP S/4HANA ABAP development role via a staffing firm. Verify whether it is remote-eligible for UTC+2..+5 before applying.",
+    "source": "opus_search",
+    "fit_score": 8,
+    "score_reason": "Rachel is a strong match for S/4HANA ABAP development with 2+ years of hands-on enterprise ABAP experience, S/4HANA familiarity, and direct client-facing work on business-critical processes. Location is pending confirmation of remote eligibility within UTC+2 to UTC+5.",
+    "ai_opener": "I've spent 2+ years building custom ABAP solutions and S/4HANA integrations for enterprise clients like Camtek and Merkavim—forms, workflows, OData services, and production troubleshooting. If this is remote-eligible for UTC+2–5, I'd love to explore how I can contribute to your S/4 initiatives.",
+    "location_ok": true,
+    "id": "19552c3eacbbd675",
+    "first_seen": "2026-07-08",
+    "last_seen": "2026-07-08"
+  },
+  {
     "company": "CodeValue",
     "title": "Senior Full Stack Developer",
     "location": "Israel (CodeValue HQ is Yokneam, Northern Israel near Haifa) — VERIFY on page",
@@ -111,6 +127,22 @@
   },
   {
     "company": "Plus500",
+    "title": "Back End Developer",
+    "location": "Haifa District, Israel",
+    "url": "https://careers.plus500.com/",
+    "posted": "",
+    "description": "Back-end developer role at a fintech with a Haifa office (fits your primary location). The direct ATS posting is reachable from the Plus500 careers site; confirm the specific requisition is still open.",
+    "source": "opus_search",
+    "fit_score": 7,
+    "score_reason": "Strong technical alignment with C# .NET backend expertise and 4+ years full stack experience. Haifa location is perfect fit. Fintech's fast-paced environment suits Rachel's end-to-end ownership track record, though no explicit SAP or React mention in the role itself suggests core backend focus.",
+    "ai_opener": "I noticed Plus500's Haifa backend role—my C# .NET stack and 4+ years shipping end-to-end systems align well, and I'm excited about fintech's real-time, high-performance demands. I'd love to explore how my experience scales backend systems and optimizes for production reliability.",
+    "location_ok": true,
+    "id": "3f38cc75ba6efcd9",
+    "first_seen": "2026-07-08",
+    "last_seen": "2026-07-08"
+  },
+  {
+    "company": "Plus500",
     "title": "Software Engineer",
     "location": "Haifa, Israel",
     "url": "https://www.comeet.com/jobs/plus500/A1.00F/software-engineer/16.B3C",
@@ -124,5 +156,21 @@
     "id": "1541fbfc408f3470",
     "first_seen": "2026-07-01",
     "last_seen": "2026-07-01"
+  },
+  {
+    "company": "CodeValue",
+    "title": "Senior Full Stack Developer (Node.js & React)",
+    "location": "Israel (CodeValue offices incl. north/Yokneam & Herzliya) — verify site/hybrid",
+    "url": "https://www.comeet.com/jobs/codevalue/81.009/senior-full-stack-developer-nodejs--react/F4.958",
+    "posted": "",
+    "description": "Senior full-stack role building products with Node.js and React for an Israeli software house. Requires strong front-end (React) and back-end (Node.js) experience.",
+    "source": "opus_search",
+    "fit_score": 5,
+    "score_reason": "Strong React expertise and full stack background, but no Node.js experience—Rachel's backend is C# .NET, not JavaScript. Location is acceptable (north office in Yokneam is near Haifa), but the tech stack mismatch on the backend is significant for a senior role.",
+    "ai_opener": "I'm a strong React developer with 4+ years of full stack experience, but I want to be upfront: my backend strength is C# .NET rather than Node.js. If you're open to that, I'd love to explore—otherwise, happy to refer strong Node.js-React candidates.",
+    "location_ok": true,
+    "id": "388fb2950fe8f455",
+    "first_seen": "2026-07-08",
+    "last_seen": "2026-07-08"
   }
 ]
